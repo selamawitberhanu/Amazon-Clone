@@ -8,11 +8,12 @@ import {BsSearch} from "react-icons/bs";
 import LowerHeader from './LowerHeader';
 import { BsCart2 } from "react-icons/bs";
 import { DataContext } from '../DataProvider/DataProvider';
+import { auth } from '../../Utility/firebase';
 
 const Header = () => {
 
-    const { state, dispatch } = useContext(DataContext);
-const { basket } = state;
+    const {state, dispatch}  = useContext(DataContext);
+const { basket, user } = state;
   const totalItems = basket?. length ? basket. reduce((sum,item)=>sum + (item.amount|| 0),0) : 0; 
 
 // console.log(useContext(DataContext));
@@ -57,12 +58,21 @@ const { basket } = state;
                 </section>
              </div>
              {/* three components */}
-             <Link to ="">
-                 <div>
-                     <p>Sign In</p>
-                     <span className={classes.bold}>Account & Lists</span>
-                 </div>
-             </Link>
+             <Link to={!user && "/auth"}>
+            <div>
+              {user?(
+                <>
+                  <p>Hello, {user?.email?.split("@")[0]}</p>
+                  <span onClick={() => auth.signOut()}>Sign out</span>
+                </>
+              ) : (
+                <>
+                  <p>Hello, Sign in</p>
+                  <span>Account & list</span>
+                </>
+              )}
+            </div>
+          </Link>
              {/* orders */}
              <Link to ="/orders">
                   <p>returns</p>

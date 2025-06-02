@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Routing from "./Router";
-
-
-// import './App.css';
-// import Header from './Components/Header/Header';
-// import Test1 from './Components/Test/Test1';
-// import Test2 from './Components/Test/Test2';
-// import Carousel from './Components/Carousel/Carousel';
-// import Category from './Components/Category/Category';
-// import Product from './Components/Product/Product';
-
+import {auth} from "./Utility/firebase";
+import { Type } from "./Utility/action.type.js";
+import { DataContext } from "./Components/DataProvider/DataProvider";
 function App() {
+const {state , dispatch} = useContext(DataContext);
+const {user} = state;
+useEffect(()=>{
+auth.onAuthStateChanged(async ()=>{
+  if(user)
+    {
+ dispatch({
+  type: Type.SET_USER_KEY, 
+  user: user
+ })
+  }
+  else{
+    dispatch({
+  type: Type.SET_USER_KEY, 
+  user: null
+ })
+  }
+})
+}, [])
+
   return <Routing />
 
 
